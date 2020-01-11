@@ -1,0 +1,3 @@
+- arg parsing ? checkout clap crate
+- better error handling
+    - enums for errors? check snafu crate

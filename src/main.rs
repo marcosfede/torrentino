@@ -1,4 +1,5 @@
-mod torrentino;
+mod metadata;
+use metadata::Torrent;
 use std::env;
 use std::process::exit;
 
@@ -10,7 +11,7 @@ fn main() {
     }
     let filename = args[1].clone();
 
-    match torrentino::Torrent::from_file(filename.as_str()) {
+    match Torrent::from_file(filename.as_str()) {
         Ok(torrent) => println!("{:?}", torrent),
         Err(e) => println!("ERROR: {:?}", e),
     }
