@@ -1,4 +1,4 @@
 mod metadata;
-pub mod hashing;
+mod hashing;
 
 pub use metadata::Torrent;

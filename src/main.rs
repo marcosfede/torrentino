@@ -1,5 +1,4 @@
-mod metadata;
-use metadata::Torrent;
+use torrentino::Torrent;
 use std::env;
 use std::process::exit;
 

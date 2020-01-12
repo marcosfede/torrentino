@@ -1,14 +1,14 @@
+use crate::hashing::{calc_sha1, Sha1};
 use serde;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_bencode;
 use serde_bytes::ByteBuf;
 use std::fmt;
 use std::fs::read;
-use crate::hashing::{Sha1};
 
 type Error = Box<dyn std::error::Error>;
 
-#[derive(Debug, Eq, PartialEq, Deserialize)]
+#[derive(Debug, Eq, PartialEq, Deserialize, Serialize)]
 struct BencodeInfo {
     pieces: ByteBuf,
     #[serde(rename = "piece length")]
@@ -20,11 +20,23 @@ struct BencodeInfo {
 
 impl BencodeInfo {
     fn hash(&self) -> Sha1 {
-        [0; 20]
+        let bytes = serde_bencode::ser::to_bytes(self).unwrap();
+        calc_sha1(&bytes)
     }
 
     fn split_piece_hashes(&self) -> Vec<Sha1> {
-        vec![[0; 20]]
+        const HASH_LEN: usize = 20; // Length of SHA-1 hash
+        let buf: Vec<u8> = self.pieces.to_vec();
+        assert_eq!(buf.len() % HASH_LEN, 0);
+        let num_hashes = buf.len() / HASH_LEN;
+        let mut hashes: Vec<Sha1> = Vec::with_capacity(num_hashes);
+        for chunk in buf.chunks_exact(HASH_LEN) {
+            hashes.push(chunk.to_vec());
+        }
+        for i in 0..num_hashes {
+            hashes[i].clone_from_slice(&buf[i * HASH_LEN..(i + 1) * HASH_LEN]);
+        }
+        hashes
     }
 }
 
@@ -82,6 +94,8 @@ impl Torrent {
         let torrent = bencode_torrent.to_torrent();
         Ok(torrent)
     }
+
+    pub fn build_tracker_url(&self) -> String {}
 }
 
 impl fmt::Debug for Torrent {
@@ -89,6 +103,11 @@ impl fmt::Debug for Torrent {
         writeln!(f, "name:\t\t{}", self.name)?;
         writeln!(f, "announce:\t{:?}", self.announce)?;
         writeln!(f, "piece length:\t{:?}", self.piece_length)?;
+        writeln!(f, "info hash:\t{:?}", self.info_hash)?;
+        // writeln!(f, "piece hashes:")?;
+        // for (i, piece_hash) in self.piece_hashes.iter().enumerate() {
+        //     writeln!(f, "piece {:?}:\t{:?}", i, piece_hash)?;
+        // }
         Ok(())
     }
 }
