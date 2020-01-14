@@ -1,4 +1,3 @@
-use crate::hashing::{calc_sha1, Sha1};
 use serde;
 use serde::{Deserialize, Serialize};
 use serde_bencode;
@@ -6,16 +5,17 @@ use serde_bytes::ByteBuf;
 use std::fmt;
 use std::fs::read;
 
-type Error = Box<dyn std::error::Error>;
+use crate::hashing::{calc_sha1, Sha1};
+use crate::utils::Error;
 
 #[derive(Debug, Eq, PartialEq, Deserialize, Serialize)]
 struct BencodeInfo {
-    pieces: ByteBuf,
+    pub pieces: ByteBuf,
     #[serde(rename = "piece length")]
-    piece_length: i64,
+    pub piece_length: i64,
     #[serde(default)]
-    length: i64,
-    name: String,
+    pub length: i64,
+    pub name: String,
 }
 
 impl BencodeInfo {
@@ -43,10 +43,10 @@ impl BencodeInfo {
 #[derive(Eq, PartialEq, Deserialize)]
 pub struct BencodeTorrent {
     #[serde(default)]
-    announce: String,
-    info: BencodeInfo,
+    pub announce: String,
+    pub info: BencodeInfo,
     #[serde(rename = "comment")]
-    comment: Option<String>,
+    pub comment: Option<String>,
 }
 
 impl BencodeTorrent {
@@ -79,12 +79,12 @@ impl fmt::Debug for BencodeTorrent {
 
 #[derive(Eq, PartialEq)]
 pub struct Torrent {
-    announce: String,
-    info_hash: Sha1,
-    piece_hashes: Vec<Sha1>,
-    piece_length: i64,
-    length: i64,
-    name: String,
+    pub announce: String,
+    pub info_hash: Sha1,
+    pub piece_hashes: Vec<Sha1>,
+    pub piece_length: i64,
+    pub length: i64,
+    pub name: String,
 }
 
 impl Torrent {
