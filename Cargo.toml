@@ -11,6 +11,7 @@ serde_derive = "^1.0.0"
 serde_bytes = "0.11.3"
 rust-crypto = "0.2.36"
 reqwest = { version = "0.10.1", features = ["blocking"] }
+percent-encoding = "2.1.0"
 
 [lib]
 name = "torrentino"

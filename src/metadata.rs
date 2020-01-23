@@ -9,7 +9,7 @@ use crate::hashing::{calc_sha1, Sha1};
 use crate::utils::Error;
 
 #[derive(Debug, Eq, PartialEq, Deserialize, Serialize)]
-struct BencodeInfo {
+pub struct BencodeInfo {
     pub pieces: ByteBuf,
     #[serde(rename = "piece length")]
     pub piece_length: i64,
@@ -94,8 +94,6 @@ impl Torrent {
         let torrent = bencode_torrent.to_torrent();
         Ok(torrent)
     }
-
-    pub fn build_tracker_url(&self) -> String {}
 }
 
 impl fmt::Debug for Torrent {

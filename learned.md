@@ -7,3 +7,9 @@
 
 ## mistakes
     - using `mod hashing` in main.rs created some problems: rust compiles 2 targets separately, main and lib. that made the `hashing` module appear in 2 targets. and imports inside the `metadata` module was not referencing correctly, as `hashing` did not exist on the built `main`
+
+
+## questions
+- [134, 212, 200, 0, 36, 164, 105, 190, 76, 80, 188, 90, 16, 44, 247, 23, 128, 49, 0, 116] was not a valid utf-8 string?
+- percent-encoding ?
+- porque no se necesita para peerid?

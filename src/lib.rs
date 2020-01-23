@@ -1,6 +1,6 @@
 mod metadata;
 mod hashing;
-mod tracker;
+pub mod tracker;
 mod utils;
 
 pub use metadata::Torrent;
